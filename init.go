@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"context"
+	crand "crypto/rand"
 	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
@@ -671,7 +672,7 @@ func getEnv(key, fallback string) string {
 
 func fakeGUID() string {
 	randBuf := make([]byte, 16)
-	rand.Read(randBuf)
+	crand.Read(randBuf)
 
 	hexBuf := make([]byte, hex.EncodedLen(len(randBuf))+4)
 
@@ -692,7 +693,7 @@ func fakeGUID() string {
 
 func logStreamName(version string) string {
 	randBuf := make([]byte, 16)
-	rand.Read(randBuf)
+	crand.Read(randBuf)
 
 	hexBuf := make([]byte, hex.EncodedLen(len(randBuf)))
 	hex.Encode(hexBuf, randBuf)
