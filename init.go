@@ -89,7 +89,6 @@ const (
 )
 
 func main() {
-	rand.Seed(time.Now().UTC().UnixNano())
 	log.SetOutput(os.Stderr)
 
 	interrupt := make(chan os.Signal, 1)
