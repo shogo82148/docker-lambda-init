@@ -27,6 +27,7 @@ jobs:
         uses: codecov/codecov-action@v4
         with:
           file: ./profile.cov
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   goreleaser-check:
     runs-on: ubuntu-latest
