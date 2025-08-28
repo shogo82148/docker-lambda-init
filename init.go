@@ -672,7 +672,9 @@ func getEnv(key, fallback string) string {
 
 func fakeGUID() string {
 	randBuf := make([]byte, 16)
-	crand.Read(randBuf)
+	if _, err := crand.Read(randBuf); err != nil {
+		panic(err)
+	}
 
 	hexBuf := make([]byte, hex.EncodedLen(len(randBuf))+4)
 
@@ -693,7 +695,9 @@ func fakeGUID() string {
 
 func logStreamName(version string) string {
 	randBuf := make([]byte, 16)
-	crand.Read(randBuf)
+	if _, err := crand.Read(randBuf); err != nil {
+		panic(err)
+	}
 
 	hexBuf := make([]byte, hex.EncodedLen(len(randBuf)))
 	hex.Encode(hexBuf, randBuf)
