@@ -646,7 +646,7 @@ func (e *errResponse) Render(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func renderJSON(w http.ResponseWriter, r *http.Request, v interface{}) {
+func renderJSON(w http.ResponseWriter, r *http.Request, v any) {
 	buf := &bytes.Buffer{}
 	enc := json.NewEncoder(buf)
 	enc.SetEscapeHTML(true)
@@ -753,7 +753,7 @@ func calculateMemoryInKb(pid int) (uint64, error) {
 	return res, nil
 }
 
-func getErrorType(err interface{}) string {
+func getErrorType(err any) string {
 	errorType := reflect.TypeOf(err)
 	if errorType.Kind() == reflect.Ptr {
 		return errorType.Elem().Name()
@@ -761,7 +761,7 @@ func getErrorType(err interface{}) string {
 	return errorType.Name()
 }
 
-func debug(v ...interface{}) {
+func debug(v ...any) {
 	if logDebug {
 		log.Println(v...)
 	}
