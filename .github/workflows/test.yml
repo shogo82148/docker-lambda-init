@@ -26,7 +26,7 @@ jobs:
       - name: upload coverage
         uses: codecov/codecov-action@v5
         with:
-          file: ./profile.cov
+          files: ./profile.cov
           token: ${{ secrets.CODECOV_TOKEN }}
 
   goreleaser-check:
