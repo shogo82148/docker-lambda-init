@@ -13,7 +13,7 @@ import (
 	"io"
 	"log"
 	"math"
-	"math/rand"
+	"math/rand/v2"
 	"net"
 	"net/http"
 	"os"
@@ -71,7 +71,7 @@ func newContext() *mockLambdaContext {
 		MemSize:         getEnv("AWS_LAMBDA_FUNCTION_MEMORY_SIZE", "1536"),
 		Timeout:         getEnv("AWS_LAMBDA_FUNCTION_TIMEOUT", "300"),
 		Region:          getEnv("AWS_REGION", getEnv("AWS_DEFAULT_REGION", "us-east-1")),
-		AccountID:       getEnv("AWS_ACCOUNT_ID", strconv.FormatInt(int64(rand.Int31()), 10)),
+		AccountID:       getEnv("AWS_ACCOUNT_ID", fmt.Sprintf("%012d", rand.Int64N(1000000000000))),
 		XAmznTraceID:    getEnv("_X_AMZN_TRACE_ID", ""),
 		ClientContext:   getEnv("AWS_LAMBDA_CLIENT_CONTEXT", ""),
 		CognitoIdentity: getEnv("AWS_LAMBDA_COGNITO_IDENTITY", ""),
