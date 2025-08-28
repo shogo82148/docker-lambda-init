@@ -13,7 +13,7 @@ import (
 	"io"
 	"log"
 	"math"
-	"math/rand"
+	"math/rand/v2"
 	"net"
 	"net/http"
 	"os"
@@ -71,7 +71,7 @@ func newContext() *mockLambdaContext {
 		MemSize:         getEnv("AWS_LAMBDA_FUNCTION_MEMORY_SIZE", "1536"),
 		Timeout:         getEnv("AWS_LAMBDA_FUNCTION_TIMEOUT", "300"),
 		Region:          getEnv("AWS_REGION", getEnv("AWS_DEFAULT_REGION", "us-east-1")),
-		AccountID:       getEnv("AWS_ACCOUNT_ID", strconv.FormatInt(int64(rand.Int31()), 10)),
+		AccountID:       getEnv("AWS_ACCOUNT_ID", fmt.Sprintf("%012d", rand.Int64N(1000000000000))),
 		XAmznTraceID:    getEnv("_X_AMZN_TRACE_ID", ""),
 		ClientContext:   getEnv("AWS_LAMBDA_CLIENT_CONTEXT", ""),
 		CognitoIdentity: getEnv("AWS_LAMBDA_COGNITO_IDENTITY", ""),
@@ -646,7 +646,7 @@ func (e *errResponse) Render(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func renderJSON(w http.ResponseWriter, r *http.Request, v interface{}) {
+func renderJSON(w http.ResponseWriter, r *http.Request, v any) {
 	buf := &bytes.Buffer{}
 	enc := json.NewEncoder(buf)
 	enc.SetEscapeHTML(true)
@@ -672,7 +672,9 @@ func getEnv(key, fallback string) string {
 
 func fakeGUID() string {
 	randBuf := make([]byte, 16)
-	crand.Read(randBuf)
+	if _, err := crand.Read(randBuf); err != nil {
+		panic(err)
+	}
 
 	hexBuf := make([]byte, hex.EncodedLen(len(randBuf))+4)
 
@@ -693,7 +695,9 @@ func fakeGUID() string {
 
 func logStreamName(version string) string {
 	randBuf := make([]byte, 16)
-	crand.Read(randBuf)
+	if _, err := crand.Read(randBuf); err != nil {
+		panic(err)
+	}
 
 	hexBuf := make([]byte, hex.EncodedLen(len(randBuf)))
 	hex.Encode(hexBuf, randBuf)
@@ -753,15 +757,15 @@ func calculateMemoryInKb(pid int) (uint64, error) {
 	return res, nil
 }
 
-func getErrorType(err interface{}) string {
+func getErrorType(err any) string {
 	errorType := reflect.TypeOf(err)
-	if errorType.Kind() == reflect.Ptr {
+	if errorType.Kind() == reflect.Pointer {
 		return errorType.Elem().Name()
 	}
 	return errorType.Name()
 }
 
-func debug(v ...interface{}) {
+func debug(v ...any) {
 	if logDebug {
 		log.Println(v...)
 	}
