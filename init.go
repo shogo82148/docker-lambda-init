@@ -755,7 +755,7 @@ func calculateMemoryInKb(pid int) (uint64, error) {
 
 func getErrorType(err any) string {
 	errorType := reflect.TypeOf(err)
-	if errorType.Kind() == reflect.Ptr {
+	if errorType.Kind() == reflect.Pointer {
 		return errorType.Elem().Name()
 	}
 	return errorType.Name()
